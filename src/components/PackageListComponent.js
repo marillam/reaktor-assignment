@@ -1,10 +1,10 @@
 import React from 'react';
-import { HashLink as Link } from 'react-router-hash-link';
+import { Link } from 'react-router-dom';
 
-const PackageListComponent = ({ p, i }) => {
+const PackageListComponent = ({ p }) => {
     return (
         <div className='basicContainer'>
-          <Link to={'#' + p.name} smooth>{p.name + ' ' + i}</Link>
+          <Link to={'/' + p.name}>{p.name}</Link>
         </div>
     );
 }

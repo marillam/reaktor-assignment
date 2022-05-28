@@ -1,62 +1,36 @@
-import './App.css';
+import './css/App.css';
 import { useState, useEffect } from 'react';
-import FileInput from './FileInput';
+import FileInput from './components/FileInput';
 import { parse } from './parser';
-import { BrowserRouter } from 'react-router-dom';
-import { HashLink as Link } from 'react-router-hash-link';
-import PackageInfo from './components/PackageInfo';
-import PackageListComponent from './components/PackageListComponent';
+import { Routes, Route, useNavigate, Link } from 'react-router-dom';
+import IndexMain from './components/IndexMain';
+import PackageInfoMain from './components/PackageInfoMain';
+import Title from './components/Title'
 
 function App() {
   const [ text, setText ] = useState('');
   const [ packages, setPackages ] = useState([]);
-  const [ focused, setFocused ] = useState('');
+  let navigate = useNavigate();
 
   useEffect(() => {
     console.log('useEffect working');
     const array = parse(text);
     setPackages(array);
+    navigate('/');
   }, [text]);
 
   return (
-    <BrowserRouter>
-      <div className='Poetry-parser'>
-        <header className="App-header">
-          <p>
-            Take a tour of your dependencies.
-            {window.location.href}
-          </p>
-          <FileInput text={text} setText={setText}/>
-        </header>
-        <ul className='package-list'>
-          {packages.map((p, i) => {
-            return (
-              <li key={p.name}>
-                <PackageListComponent p={p} i={i}/>
-              </li>);
-          })}
-        </ul> 
-        <ul className='package-list'>
-          {packages.map((p, i) => {
-            return (
-              <li key={p.name+'tarkka'}>
-                <PackageInfo p={p}/>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </BrowserRouter>
+    <div className='Poetry-parser'>
+      <header className="App-header">
+        <Link className='title-link' to={'/'}>{<Title/>}</Link>
+        <FileInput text={text} setText={setText}/>
+      </header>
+      <Routes>
+        <Route path='/:name' element={<PackageInfoMain packages={packages}/>}/>
+        <Route path='/' element={<IndexMain packages={packages}/>}/>
+      </Routes>
+    </div>
   );
 }
-
-/*
-{packages.forEach(p => {
-        <div>
-          <h4>{p.name}</h4>
-          <p>{p.description}</p>
-          <br/>
-        </div>
-      })}*/
 
 export default App;

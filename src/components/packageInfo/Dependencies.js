@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashLink as Link } from 'react-router-hash-link';
+import { Link } from 'react-router-dom';
 
 const Dependencies = ({ dependencies }) => {
     return (
@@ -10,7 +10,7 @@ const Dependencies = ({ dependencies }) => {
               return (
                 <li key={i}>
                   <div className='info-list-div'>
-                    <Link className='info' to={'#' + dp} smooth>{dp}</Link>
+                    <Link className='info' to={'/' + dp}>{dp}</Link>
                   </div>
                 </li>
               );

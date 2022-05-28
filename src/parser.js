@@ -6,7 +6,6 @@ export const parse = (string) => {
     const includedPackages = new Set();
 
     const array = [];
-    //let curPackage = undefined; //object
 
     const lines = s.split("\n");
 
@@ -49,7 +48,7 @@ export const parse = (string) => {
         let [innerKey, ...rest] = str.split("=");
         if(rest.length !== 0) {
             innerKey = innerKey.trim();
-            if(rest.join('=').includes('optional = true')) {    //does not allow different whitespace
+            if(rest.join('=').includes('optional = true')) {    //does not allow extra whitespace
                 includeInOptional.push(innerKey);
             } else {
                 includeIn.push(innerKey);
@@ -63,20 +62,15 @@ export const parse = (string) => {
             rest = rest.join('=')
             rest = rest.trim();
             rest = rest.replace(/^\[(.+(?=\]$))\]$/, '$1');
-            //console.log("1:  " + str);
             rest = rest.replace(/\(([^\)]+(?=\)))\)/g, '');
-            //console.log("2.1:  " + str);
             rest = rest.replace(/["]+/g, '');
-            //console.log("2.2:  " + str);  
             rest = rest.split(',');
-            //console.log("3:  " + str + " " + str.length);
             rest.forEach(pack => {
                 const name = pack.trim();
                 if(!includeIn.includes(name)) {
                     includeIn.push(name);
                 }
             });
-            //console.log("4:  " + str);
         }
     }
 
@@ -148,9 +142,18 @@ export const parse = (string) => {
         });
         p.optionalDependencies = odWithInclusion;
 
+
+        /*p.dependencies.forEach(pa => {
+            if(!includedPackages.has(pa)) {
+                count += 1;
+                console.log(pa)
+            }
+        });*/
+        
+
         // search reverse dependencies
         array.forEach(otherps => {
-            //will also check itself but that doesn't cause any harm so will ignore instead of making an if every time
+            //will also check itself but that doesn't cause any harm here so chose not to do extra comparisons
             otherps.dependencies.forEach(d => {
                 if(d === p.name) {
                     p.reverseDependencies.push(otherps.name);
@@ -163,40 +166,14 @@ export const parse = (string) => {
             });
         });
 
-        // alphabetical orders 
+        // alphabetical orders for dependencies
         p.dependencies.sort(alphabeticalSort);
         p.optionalDependencies.sort(alphabeticalSortName);
         p.reverseDependencies.sort(alphabeticalSort);
     });
 
-    // make sure the order is alphabetical
+    // alphabetical orders for packages
     array.sort(alphabeticalSortName);
-
-    console.log(array);
-    console.log(includedPackages.size);
-
-    let aa = '  ["coverage[toml] (>=5.0.2)"   , "hypothesis", "pympler", "pytest (>=4.3.0)"]'.toString();
-
-    /*const test = (rest) => {
-        rest = rest.trim();
-            rest = rest.replace(/^\[(.+(?=\]$))\]$/, '$1');
-            console.log("1:  " + rest);
-            rest = rest.replace(/\(([^\)]+(?=\)))\)/g, '');
-            console.log("2.1:  " + rest);
-            rest = rest.replace(/["]+/g, '');
-            console.log("2.2:  " + rest);  
-            rest = rest.split(',');
-            console.log("3:  " + rest + " " + rest.length);
-            rest = rest.map(pack => {
-                return pack.trim();
-            });
-            console.log("4:  " + rest);
-    }
-
-    console.log(aa);
-
-    test(aa);*/
-
 
     return array;
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashLink as Link } from 'react-router-hash-link';
+import { Link } from 'react-router-dom';
 
 const ReverseDependencies = ({ reverseDependencies }) => {
     return (
@@ -10,7 +10,7 @@ const ReverseDependencies = ({ reverseDependencies }) => {
               return (
                 <li key={i}>
                   <div className='info-list-div'>
-                    <Link className='info' to={'#' + rdp} smooth>{rdp}</Link>
+                    <Link className='info' to={'/' + rdp}>{rdp}</Link>
                   </div>
                 </li>
               );

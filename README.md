@@ -7,6 +7,7 @@ All parsing logic is inside the parser.js file. Some things to note:
     - Dependencies/extra dependecies in style coverage[toml] caused some confusion (as in which package should be taken from that) so this assumes the outer, e.g. here coverage
     - For reverse dependencies I counted optional dependencies too
     - Works for format of version 1.1
+    - Tested on this file: https://github.com/python-poetry/poetry/blob/70e8e8ed1da8c15041c3054603088fce59e05829/poetry.lock
 
 The file is read as a string. This is done with the assumption that these files aren't huge based on what they should contain. Just a note that this approach would likely cause a crash on big files.
 

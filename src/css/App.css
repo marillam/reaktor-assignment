@@ -28,13 +28,27 @@ a.info:hover {
   text-decoration: underline;
 }
 
+a.title-link:link {
+  color: white;
+  text-decoration: none;
+}
+a.title-link:visited {
+  color: white;
+  text-decoration: none;
+}
+a.title-link:hover {
+  color: #FFAC89;
+  text-decoration: none;
+}
+
 ul {
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 ul.package-list {
   list-style: none;
+  margin-top: 0px;
 }
 
 .info-list-div {
@@ -45,6 +59,16 @@ ul.package-list {
 p {
   margin-block-start: 0px;
   margin-block-end: 0px;
+}
+
+p.header {
+  margin-block-start: 0px;
+  margin-block-end: 26px;
+}
+
+form {
+  margin-left: 80px;
+  margin-bottom: 30px;
 }
 
 .basicContainer {
@@ -72,23 +96,48 @@ p {
   padding-top: 10px;
   padding-bottom: 28px;
   padding-left: 30px;
-  margin-top: 5px;
   margin-bottom: 5px;
   border-radius: 10px;
   background: white;
 }
 
 .Poetry-parser {
-  background-color: #632495
+  background-color: #632495;
+}
+
+body {
+  background-color: #632495;
+}
+
+.main-content {
+  padding-top: 170px;
+  padding-left: 90px;
+  padding-right: 90px;
+}
+
+.main-content-info {
+  padding-top: 170px;
+  padding-left: 240px;
+  padding-right: 90px;
+}
+
+.sidebar {
+  position: fixed;
+  width: 200px;
+  overflow-y: scroll;
+  top: 170px;
+  bottom: 0;
 }
 
 .App-header {
   background-color: #632495;
-  min-height: 12vh;
+  min-height: 170px;
+  position: fixed;
+  width: 100%;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  align-items: end;
+  justify-content: space-evenly;
   font-size: calc(10px + 2vmin);
   color: white;
 }
