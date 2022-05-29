@@ -1,17 +1,16 @@
 
 This is a poetry.lock file parser. 
-Interaction with this happens through an html interface where the user selects a file from their computer. Index page is a listing of all packages where the names link to details. The whole div would have been nice as a link but the instruction was to use the name. The front is implemented with React.
+Interaction with this happens through an html interface where the user selects a file from their computer. Index page is a listing of all packages where the names link to details. The whole div would have been nice as a link but the instruction was to use the name. The front is implemented with React. SessionStorage is used to keep the package information from the last selected and submitted file.
 
 All parsing logic is inside the parser.js file. Some things to note:
     - Optional dependecies are separated from the 'mandatory' dependecies because I wasn't sure if they should be and figured it couldn't do any harm
     - Dependencies/extra dependecies in style coverage[toml] caused some confusion (as in which package should be taken from that) so this assumes the outer, e.g. here coverage
+    - Noticed that one listed dependency (poetry for poetry-plugin-export) wasn't in the packages. I'm assuming this is a special case but since it won't work as a link I added a similar check to dependencies as there is in optional and extras
     - For reverse dependencies I counted optional dependencies too
     - Works for format of version 1.1
     - Tested on this file: https://github.com/python-poetry/poetry/blob/70e8e8ed1da8c15041c3054603088fce59e05829/poetry.lock
 
-The file is read as a string. This is done with the assumption that these files aren't huge based on what they should contain. Just a note that this approach would likely cause a crash on big files.
-
-
+The file is read as a string. This is done with the assumption that these files aren't huge based on what they should contain. Just a note that this approach would likely cause a crash on big files. 
 
 
 

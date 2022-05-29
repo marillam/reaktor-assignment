@@ -4,7 +4,6 @@ export const parse = (string) => {
 
     //map for checking which optionals are included
     const includedPackages = new Set();
-
     const array = [];
 
     const lines = s.split("\n");
@@ -48,10 +47,10 @@ export const parse = (string) => {
         let [innerKey, ...rest] = str.split("=");
         if(rest.length !== 0) {
             innerKey = innerKey.trim();
-            if(rest.join('=').includes('optional = true')) {    //does not allow extra whitespace
-                includeInOptional.push(innerKey);
+            if(rest.join('=').includes('optional = true')) {            //does not allow extra whitespace here 
+                includeInOptional.push(innerKey.toLowerCase());         // a check to make sure no dependencies aren't found because of letter size
             } else {
-                includeIn.push(innerKey);
+                includeIn.push(innerKey.toLowerCase());                 // a check to make sure no dependencies aren't found because of letter size
             }
         }
     }
@@ -61,14 +60,14 @@ export const parse = (string) => {
         if(rest.length !== 0) {
             rest = rest.join('=')
             rest = rest.trim();
-            rest = rest.replace(/^\[(.+(?=\]$))\]$/, '$1');
-            rest = rest.replace(/\(([^\)]+(?=\)))\)/g, '');
-            rest = rest.replace(/["]+/g, '');
-            rest = rest.split(',');
+            rest = rest.replace(/^\[(.+(?=\]$))\]$/, '$1');         // gets rid of the outer []
+            rest = rest.replace(/\(([^)]+(?=\)))\)/g, '');         // deletes the version numbers by replacing everything between () with nothing
+            rest = rest.replace(/["]+/g, '');                       // gets rid of the "" around the names
+            rest = rest.split(',');                                 // separates the packages
             rest.forEach(pack => {
                 const name = pack.trim();
                 if(!includeIn.includes(name)) {
-                    includeIn.push(name);
+                    includeIn.push(name.toLowerCase());             // a check to make sure no dependencies aren't found because of letter size
                 }
             });
         }
@@ -89,12 +88,13 @@ export const parse = (string) => {
             i += 1;
             let newLine = nextLine();
             while(newLine !== '[[package]]' && i < lines.length) {
-                let [key, value] = newLine.split("=");
-                value ? value = cleanString(value) : value = value;
+                let [key, v] = newLine.split("=");
+                let value;
+                v ? value = cleanString(v) : value = v;
                 switch (key.trim()) {
                     case 'name':
-                        newPackage.name = value;
-                        includedPackages.add(value);
+                        newPackage.name = value.toLowerCase();                              // a check to make sure no dependencies aren't found because of letter size
+                        includedPackages.add(value.toLowerCase());
                         i += 1;
                         break;
                     case 'description':
@@ -137,37 +137,36 @@ export const parse = (string) => {
 
     array.forEach(p => {
         // search which optional dependencies are included
-        const odWithInclusion = p.optionalDependencies.map(op => {
-            return { name: op, included: includedPackages.has(op) }
+        const odWithInclusion = p.optionalDependencies.map(od => {
+            const odWithoutInner = od.replace(/\[([^\]]+(?=\]))\]/g, '');                      // makes optional dependencies like coverage[toml] point to coverage
+            return { name: od, included: includedPackages.has(odWithoutInner), link: odWithoutInner }
         });
         p.optionalDependencies = odWithInclusion;
 
 
-        /*p.dependencies.forEach(pa => {
-            if(!includedPackages.has(pa)) {
-                count += 1;
-                console.log(pa)
-            }
-        });*/
-        
+        const checkedDependencies = p.dependencies.map(d => {
+            const dWithoutInner = d.replace(/\[([^\]]+(?=\]))\]/g, '');                      // same as above to make the code more resilient to changes in format, in case this is possible but just didn't appear in the file I used
+            return { name: d, included: includedPackages.has(dWithoutInner), link: dWithoutInner }
+        });
+        p.dependencies = checkedDependencies;
 
         // search reverse dependencies
-        array.forEach(otherps => {
+        array.forEach(otherPack => {
             //will also check itself but that doesn't cause any harm here so chose not to do extra comparisons
-            otherps.dependencies.forEach(d => {
+            otherPack.dependencies.forEach(d => {
                 if(d === p.name) {
-                    p.reverseDependencies.push(otherps.name);
+                    p.reverseDependencies.push(otherPack.name);
                 }
             });
-            otherps.optionalDependencies.forEach(od => {
+            otherPack.optionalDependencies.forEach(od => {
                 if(od.name === p.name) {
-                    p.reverseDependencies.push(otherps.name);
+                    p.reverseDependencies.push(otherPack.name);
                 }
             });
         });
 
         // alphabetical orders for dependencies
-        p.dependencies.sort(alphabeticalSort);
+        p.dependencies.sort(alphabeticalSortName);
         p.optionalDependencies.sort(alphabeticalSortName);
         p.reverseDependencies.sort(alphabeticalSort);
     });

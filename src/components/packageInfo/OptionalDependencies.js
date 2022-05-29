@@ -10,7 +10,7 @@ const OptionalDependencies = ({ optionalDependencies }) => {
             <li key={i}>
               {odp.included ? 
                 <div className='info-list-div'>
-                  <Link className='info' to={'/' + odp.name}>{odp.name}</Link>
+                  <Link className='info' to={'/' + odp.link}>{odp.name}</Link>
                 </div>
                 : 
                 <div className='info-list-div'>

@@ -44,11 +44,13 @@ a.title-link:hover {
 ul {
   padding-left: 0px;
   padding-right: 0px;
+  margin-left: 30px;
 }
 
 ul.package-list {
   list-style: none;
   margin-top: 0px;
+  margin-left: 0px;
 }
 
 .info-list-div {
@@ -96,7 +98,7 @@ form {
   padding-top: 10px;
   padding-bottom: 28px;
   padding-left: 30px;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
   border-radius: 10px;
   background: white;
 }
@@ -136,7 +138,7 @@ body {
   width: 100%;
   display: flex;
   flex-direction: row;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-evenly;
   font-size: calc(10px + 2vmin);
   color: white;

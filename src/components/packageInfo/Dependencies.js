@@ -9,9 +9,15 @@ const Dependencies = ({ dependencies }) => {
             {dependencies.map((dp, i) => {
               return (
                 <li key={i}>
-                  <div className='info-list-div'>
-                    <Link className='info' to={'/' + dp}>{dp}</Link>
-                  </div>
+                  {dp.included ? 
+                    <div className='info-list-div'>
+                      <Link className='info' to={'/' + dp.link}>{dp.name}</Link>
+                    </div>
+                    : 
+                    <div className='info-list-div'>
+                      <p>{dp.name + " --> not listed as a package :D"}</p>
+                    </div>
+                  }
                 </li>
               );
             })}
